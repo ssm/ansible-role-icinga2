@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts:
+    - icinga_master
+    - icinga_satellite
+  roles:
+    - role: ssm.icinga2

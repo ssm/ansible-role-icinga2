@@ -1,0 +1,55 @@
+---
+- name: Sanity check
+  assert:
+    that:
+      - icinga_parent_fqdn is defined
+
+- name: Create key and certificate
+  command: >-
+    icinga2 pki new-cert --cn {{ inventory_hostname | quote }}
+    --key /var/lib/icinga2/certs/{{ inventory_hostname | quote }}.key
+    --cert /var/lib/icinga2/certs/{{ inventory_hostname | quote }}.crt
+  args:
+    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
+
+- name: Read ca certificate
+  slurp:
+    src: "/var/lib/icinga2/ca/ca.crt"
+  register: icinga_ca_certificate
+  delegate_to: "{{ icinga_parent_fqdn }}"
+
+- name: Write ca certificate
+  copy:
+    dest: /var/lib/icinga2/certs/ca.crt
+    content: "{{ icinga_ca_certificate['content'] | b64decode }}"
+    owner: icinga
+    group: icinga
+    mode: "0644"
+
+- name: Read parent certificate
+  slurp:
+    src: "/var/lib/icinga2/certs/{{ icinga_parent_fqdn }}.crt"
+  register: icinga_parent_certificate
+  delegate_to: "{{ icinga_parent_fqdn }}"
+
+- name: Write trusted master certificate
+  copy:
+    dest: /var/lib/icinga2/certs/trusted-parent.crt
+    content: "{{ icinga_parent_certificate['content'] | b64decode }}"
+    owner: icinga
+    group: icinga
+    mode: "0644"
+
+- name: Generate a certificate signing ticket
+  command: >-
+    icinga2 pki ticket --cn {{ inventory_hostname | quote }}
+  register: icinga_pki_ticket
+  delegate_to: "{{ icinga_parent_fqdn }}"
+
+- command: >-
+    icinga2 node setup \
+    --zone {{ inventory_hostname | quote }} \
+    --parent_host {{ icinga_parent_fqdn | quote }},5665 \
+    --endpoint {{ icinga_parent_fqdn | quote }} \
+    --trustedcert /var/lib/icinga2/certs/trusted-parent.crt
+    --ticket "{{ icinga_pki_ticket.stdout_lines[0] | quote }}"

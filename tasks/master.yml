@@ -1,0 +1,12 @@
+---
+- name: Configure master server
+  command: icinga2 node setup --master
+  args:
+    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
+  register: icinga_master_setup
+
+- name: Restart
+  service:
+    name: icinga2
+    state: restarted
+  when: icinga_master_setup.changed
