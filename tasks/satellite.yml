@@ -45,6 +45,7 @@
     icinga2 pki ticket --cn {{ inventory_hostname | quote }}
   register: icinga_pki_ticket
   delegate_to: "{{ icinga_parent_fqdn }}"
+  changed_when: false
 
 - command: >-
     icinga2 node setup \
