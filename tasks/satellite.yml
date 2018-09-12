@@ -47,10 +47,13 @@
   delegate_to: "{{ icinga_parent_fqdn }}"
   changed_when: false
 
-- command: >-
+- name: Setup node
+  command: >-
     icinga2 node setup \
     --zone {{ inventory_hostname | quote }} \
     --parent_host {{ icinga_parent_fqdn | quote }},5665 \
     --endpoint {{ icinga_parent_fqdn | quote }} \
     --trustedcert /var/lib/icinga2/certs/trusted-parent.crt
     --ticket "{{ icinga_pki_ticket.stdout_lines[0] | quote }}"
+  args:
+    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
