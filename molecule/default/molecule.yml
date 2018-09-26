@@ -6,7 +6,7 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: master
+  - name: monitor-m01
     groups:
       - icinga_master
     image: centos/systemd
@@ -14,7 +14,7 @@ platforms:
     command: /usr/sbin/init
     networks:
       - name: molecule-icinga2
-  - name: satellite
+  - name: monitor-s01
     groups:
       - icinga_satellite
     image: centos/systemd
@@ -28,11 +28,13 @@ provisioner:
     name: ansible-lint
   inventory:
     host_vars:
-      satellite:
-        icinga_parent_fqdn: master
+      monitor-s01:
+        icinga_parent_fqdn: monitor-m01
 scenario:
   name: default
 verifier:
   name: testinfra
+  options:
+    verbose: true
   lint:
     name: flake8
