@@ -1,5 +1,24 @@
 ---
-- name: Converge
+- name: Webserver
+  hosts:
+    - icinga_master
+  roles:
+    - role: geerlingguy.apache
+
+- name: Database
+  hosts:
+    - icinga_master
+  roles:
+    - role: geerlingguy.postgresql
+  vars:
+    postgresql_databases:
+      - name: icinga
+    postgresql_users:
+      - name: icinga
+        password: icinga
+        db: icinga
+
+- name: Icinga 2
   hosts:
     - icinga_master
     - icinga_satellite

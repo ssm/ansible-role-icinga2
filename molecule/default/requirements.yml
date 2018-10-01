@@ -1,0 +1,4 @@
+- src: geerlingguy.apache
+  version: "3.0.0"
+- src: geerlingguy.postgresql
+  version: "1.4.3"
