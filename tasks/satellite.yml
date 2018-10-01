@@ -4,14 +4,6 @@
     that:
       - icinga_parent_fqdn is defined
 
-- name: Create key and certificate
-  command: >-
-    icinga2 pki new-cert --cn {{ inventory_hostname | quote }}
-    --key /var/lib/icinga2/certs/{{ inventory_hostname | quote }}.key
-    --cert /var/lib/icinga2/certs/{{ inventory_hostname | quote }}.crt
-  args:
-    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
-
 - name: Read ca certificate
   slurp:
     src: "/var/lib/icinga2/ca/ca.crt"
