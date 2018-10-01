@@ -2,3 +2,4 @@
 # defaults file for ssm.icinga2
 icinga2_key_url: https://packages.icinga.com/icinga.key
 icinga2_repo_url: https://packages.icinga.com/epel/icinga-rpm-release-7-latest.noarch.rpm
+icinga2_manage_repo: true

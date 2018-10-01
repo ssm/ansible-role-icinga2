@@ -1,0 +1,29 @@
+---
+- name: Enable repository
+  block:
+    - name: Import signing key
+      rpm_key:
+        key: "{{ icinga2_key_url }}"
+        state: present
+
+    - name: Configure package repository
+      package:
+        name: "{{ icinga2_repo_url }}"
+        state: installed
+  when: icinga2_manage_repo
+
+- name: Install monitoring plugins
+  package:
+    name: nagios-plugins-all
+    state: installed
+
+- name: Install icinga2 server
+  package:
+    name: icinga2
+    state: installed
+
+- name: Start and enable service
+  service:
+    name: icinga2
+    state: started
+    enabled: true

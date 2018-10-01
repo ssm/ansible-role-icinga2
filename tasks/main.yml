@@ -1,40 +1,10 @@
 ---
 # tasks file for ssm.icinga2
 
-- name: Install epel-release
-  package:
-    name: epel-release
-    state: installed
-
-- name: Import signing key
-  rpm_key:
-    key: "{{ icinga2_key_url }}"
-    state: present
-
-- name: Configure package repository
-  package:
-    name: "{{ icinga2_repo_url }}"
-    state: installed
-
-- name: Install package
-  package:
-    name: icinga2
-    state: installed
-
-- name: Start and enable service
-  service:
-    name: icinga2
-    state: started
-    enabled: true
+- include_tasks: install.yml
 
 - include_tasks: master.yml
   when: '"icinga_master" in group_names'
 
 - include_tasks: satellite.yml
   when: '"icinga_satellite" in group_names'
-
-- name: Install monitoring plugins
-  package:
-    name: nagios-plugins-all
-    state: installed
-  when: icinga_install_plugins is defined
