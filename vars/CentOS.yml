@@ -1,0 +1,3 @@
+---
+icinga2_web_prerequisites:
+  - centos-release-scl

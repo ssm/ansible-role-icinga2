@@ -8,3 +8,6 @@
 
 - include_tasks: satellite.yml
   when: '"icinga_satellite" in group_names'
+
+- include_tasks: web.yml
+  when: '"icinga_web" in group_names'

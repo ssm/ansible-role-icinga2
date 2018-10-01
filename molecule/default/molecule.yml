@@ -9,6 +9,7 @@ platforms:
   - name: monitor-m01
     groups:
       - icinga_master
+      - icinga_web
     image: centos/systemd
     privileged: true
     command: /usr/sbin/init
