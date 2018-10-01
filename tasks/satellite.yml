@@ -49,12 +49,16 @@
 
 - name: Setup node
   command: >-
-    icinga2 node setup \
-    --zone {{ inventory_hostname | quote }} \
-    --parent_host {{ icinga_parent_fqdn | quote }},5665 \
-    --endpoint {{ icinga_parent_fqdn | quote }} \
+    icinga2 node setup
+    --zone {{ inventory_hostname | quote }}
+    --parent_host {{ icinga_parent_fqdn | quote }},5665
+    --endpoint {{ icinga_parent_fqdn | quote }},{{ icinga_parent_fqdn | quote }},5665
     --trustedcert /var/lib/icinga2/certs/trusted-parent.crt
-    --ticket "{{ icinga_pki_ticket.stdout_lines[0] | quote }}"
+    --ticket {{ icinga_pki_ticket.stdout_lines[0] | quote }}
+    --parent_zone master
+    --accept-commands
+    --accept-config
+    --disable-confd
   args:
     creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
   register: icinga2_satellite_setup
