@@ -57,3 +57,14 @@
     --ticket "{{ icinga_pki_ticket.stdout_lines[0] | quote }}"
   args:
     creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
+  register: icinga2_satellite_setup
+
+- name: Restart
+  service:
+    name: icinga2
+    state: restarted
+  when: icinga2_satellite_setup.changed
+
+- name: Wait for icinga service pid
+  wait_for:
+    path: /run/icinga2/icinga2.pid

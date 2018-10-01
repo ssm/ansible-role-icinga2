@@ -10,3 +10,14 @@
     name: icinga2
     state: restarted
   when: icinga2_master_setup.changed
+
+- name: Wait for icinga service pid
+  wait_for:
+    path: /run/icinga2/icinga2.pid
+
+- name: Wait for icinga service port
+  wait_for:
+    port: 5665
+    connect_timeout: 3
+    delay: 3
+    timeout: 30
