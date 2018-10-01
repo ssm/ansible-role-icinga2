@@ -4,10 +4,26 @@
     that:
       - icinga_parent_fqdn is defined
 
-- name: Read ca certificate
-  slurp:
-    src: "/var/lib/icinga2/ca/ca.crt"
-  register: icinga_ca_certificate
+- name: Interaction with CA
+  block:
+    - name: Get CA certificate
+      slurp:
+        src: "/var/lib/icinga2/ca/ca.crt"
+      register: icinga_ca_certificate
+
+    - name: Get CA ticket
+      command: >-
+        icinga2 pki ticket --cn {{ inventory_hostname | quote }}
+      register: icinga_pki_ticket
+      changed_when: false
+  delegate_to: "{{ icinga_parent_fqdn }}"
+
+- name: Interaction with parent node
+  block:
+    - name: Get trusted parent certificate
+      slurp:
+        src: "/var/lib/icinga2/certs/{{ icinga_parent_fqdn }}.crt"
+      register: icinga_parent_certificate
   delegate_to: "{{ icinga_parent_fqdn }}"
 
 - name: Write ca certificate
@@ -18,26 +34,13 @@
     group: icinga
     mode: "0644"
 
-- name: Read parent certificate
-  slurp:
-    src: "/var/lib/icinga2/certs/{{ icinga_parent_fqdn }}.crt"
-  register: icinga_parent_certificate
-  delegate_to: "{{ icinga_parent_fqdn }}"
-
-- name: Write trusted master certificate
+- name: Write trusted parent certificate
   copy:
     dest: /var/lib/icinga2/certs/trusted-parent.crt
     content: "{{ icinga_parent_certificate['content'] | b64decode }}"
     owner: icinga
     group: icinga
     mode: "0644"
-
-- name: Generate a certificate signing ticket
-  command: >-
-    icinga2 pki ticket --cn {{ inventory_hostname | quote }}
-  register: icinga_pki_ticket
-  delegate_to: "{{ icinga_parent_fqdn }}"
-  changed_when: false
 
 - name: Setup node
   command: >-
