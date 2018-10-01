@@ -1,0 +1,11 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Install test requirements
+      package:
+        name: "{{ item }}"
+        state: installed
+      with_items:
+        - openssl
+        - epel-release
