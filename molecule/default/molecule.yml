@@ -1,6 +1,8 @@
 ---
 dependency:
   name: galaxy
+  options:
+    force: false
 driver:
   name: docker
 lint:
