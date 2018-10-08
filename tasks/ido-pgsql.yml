@@ -1,34 +1,40 @@
 ---
-- name: Install packages
+- name: Ensure package is installed
   package:
     name: icinga2-ido-pgsql
     state: installed
   notify:
     - restart icinga2
 
-- name: check schema version
+- name: Ensure idoutils schema is loaded
   become: true
   become_user: icinga
-  command:
-  args:
-    argv:
-      - psql
-      - icinga
-      - -A
-      - -t
-      - -c
-      - select count(name) from icinga_dbversion where name = 'idoutils'
-  register: icinga_dbversion
-  changed_when: false
-  failed_when: false
-  check_mode: false
+  block:
+    - name: Check icinga2-ido schema presence
+      command:
+      args:
+        argv:
+          - psql
+          - icinga
+          - -A
+          - -t
+          - -c
+          - select count(name) from icinga_dbversion where name = 'idoutils'
+      register: icinga_dbversion
+      changed_when: false
+      failed_when: false
+      check_mode: false
 
-- name: ensure schema is loaded
-  command:
-  args:
-    argv:
-      - psql
-      - icinga
-      - -f
-      - /usr/share/icinga2-ido-pgsql/schema/pgsql.sql
-  when: icinga_dbversion.stdout != "1"
+    - name: debug
+      debug:
+        var: icinga_dbversion
+
+    - name: Load icinga2-ido schema
+      command:
+      args:
+        argv:
+          - psql
+          - icinga
+          - -f
+          - /usr/share/icinga2-ido-pgsql/schema/pgsql.sql
+      when: icinga_dbversion.stdout != "1"
