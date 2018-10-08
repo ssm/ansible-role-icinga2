@@ -13,10 +13,14 @@
   vars:
     postgresql_databases:
       - name: icinga
+      - name: icingaweb2
     postgresql_users:
       - name: icinga
         password: icinga
         db: icinga
+      - name: icingaweb2
+        password: icingaweb2
+        db: icingaweb2
 
 - name: Icinga 2
   hosts:
