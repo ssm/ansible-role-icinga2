@@ -4,13 +4,8 @@
     - icinga_master
   roles:
     - role: geerlingguy.apache
-  tasks:
-    # TODO Configure php.ini timezone
-    - name: Ensure php-fpm is started and enabled
-      service:
-        name: rh-php71-php-fpm.service
-        state: started
-        enabled: true
+    - role: geerlingguy.php
+    - role: geerlingguy.apache-php-fpm
 
 - name: Database
   hosts:
