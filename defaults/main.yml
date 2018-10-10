@@ -9,3 +9,70 @@ icinga2_web_packages:
   - icingaweb2-selinux
   - icingacli
 icinga2_ido_type: pgsql
+
+icinga2_web_config_resources_ini:
+  - section: icingaweb2
+    option: type
+    value: db
+  - section: icingaweb2
+    option: db
+    value: pgsql
+  - section: icingaweb2
+    option: host
+    value: pgsql
+  - section: icingaweb2
+    option: port
+    value: 5432
+  - section: icingaweb2
+    option: username
+    value: icingaweb2
+  - section: icingaweb2
+    option: password
+    value: icingaweb2
+
+  - section: icinga2
+    option: type
+    value: db
+  - section: icinga2
+    option: db
+    value: pgsql
+  - section: icinga2
+    option: host
+    value: pgsql
+  - section: icinga2
+    option: port
+    value: 5432
+  - section: icinga2
+    option: username
+    value: icinga
+  - section: icinga2
+    option: password
+    value: icinga
+
+
+icinga2_web_config_config_ini:
+  - section: logging
+    option: log
+    value: syslog
+  - section: logging
+    option: level
+    value: ERROR
+  - section: logging
+    option: application
+    value: icingaweb2
+
+  - section: preferences
+    option: type
+    value: db
+  - section: preferences
+    option: resource
+    value: icingaweb2
+
+
+icinga2_web_config_authentication_ini:
+  - section: icingaweb2
+    option: backend
+    value: db
+  - section: icingaweb2
+    option: resource
+    value: icingaweb2
