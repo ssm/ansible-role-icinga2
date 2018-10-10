@@ -49,4 +49,3 @@
   with_items: "{{ icinga2_web_config_authentication_ini }}"
   loop_control:
     label: "[{{ item.section }}] {{ item.option }}"
-
