@@ -14,7 +14,9 @@ def test_ido_package(host):
 
 def test_ido_active(host):
     c = host.run('icinga2 feature list')
-    assert re.search(r"^Enabled features:\s+(?:\S+\s+)*ido-pgsql(?:\s+\S+)*$", c.stdout, flags=re.MULTILINE)
+    assert re.search(
+        r"^Enabled features:\s+(?:\S+\s+)*ido-pgsql(?:\s+\S+)*$",
+        c.stdout, flags=re.MULTILINE)
 
 
 def test_service_postgresql(host):
