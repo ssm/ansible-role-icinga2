@@ -46,8 +46,6 @@
       when: _dbversion.stdout != "1"
       register: _schema
 
-- meta: flush_handlers
-
 - name: Reload icinga2 configuration
   service:
     name: icinga2.service
