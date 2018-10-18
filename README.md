@@ -1,10 +1,8 @@
-ssm.icinga2
-===========
+# ssm.icinga2
 
 Install and configure Icinga 2 master and satellites.
 
-Requirements
-------------
+## Requirements
 
 This role requires you to configure repositories for icinga2, icingaweb2 and
 their dependencies. For CentOS/RHEL version 7 this means EPEL and Software
@@ -15,28 +13,29 @@ You should configure a database server, web server, as well as a php server
 
 TODO: Write requirements documentation.
 
-Role Variables
---------------
+## Role Variables
 
 - icinga2_manage_repo: When this is set to a true value, the role will install
   and configure the repository and signing key for the icinga packages.
 
-- icinga2_key_url: The URL for the icinga repo signing key.
+- icinga2_key_url: The URL for the icinga repo signing key. Used only if
+  icinga2_manage_repo is set to a true value.
 
-- icinga2_repo_url: The URL for the icinga repo.
+- icinga2_repo_url: The URL for the icinga repo. Used only if
+  icinga2_manage_repo is set to a true value.
 
 TODO: Write documentation. In the meantime, see defaults/main.yml
 
-Inventory
----------
+## Inventory
 
 For each host, a set of variables determines its role and location in the
 icinga2 cluster architecture.
 
 TODO: Refactor inconsistent variable names and use.
 
-Inventory variables
-+++++++++++++++++++
+### Inventory variables
+
+- icinga2_role: The role of this host. "master" or "satellite"
 
 - icinga2_zone: The zone name for this host
 
@@ -47,50 +46,17 @@ Inventory variables
 - icinga2_endpoint: A list of parent endpoints to connect to for configuration
   and checks (string, array)
 
-Inventory group: icinga_master
-++++++++++++++++++++++++++++++
+## Example Playbook
 
-This group is for hosts in the Icinga 2 master zone. It is expected to run the
-configuration master, the TLS Certificate Authority and the icinga web
-frontend. For now, it supports one master. The master zone is "master".
+Order the hosts in the inventory so the master is provisioned first. The
+satellites and the clients need the master to be operational.
 
-TODO: Configuration items:
-
-- master zone name
-
-Inventory group: icinga_satellite
-+++++++++++++++++++++++++++++++++
-
-This group is for hosts in the Icinga satellite zones. These run no web
-interface, and receive configuration from the master zone. This is tested with
-one level of zones below master, but could in theory support nested or chained
-zones.
-
-Satellites which share zone name will load balance active checks.
-
-TODO: Configuration items:
-
-- ca host
-- trusted parent host
-- satellite zone name
-
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables
-passed in as parameters) is always nice for users too:
-
-    - hosts: servers
+    - hosts:
+        - master
+        - satellites
       roles:
          - role: ssm.icinga2
 
-License
--------
+## License
 
 GPLv3
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a
-website (HTML is not allowed).
