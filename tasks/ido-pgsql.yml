@@ -3,8 +3,18 @@
   package:
     name: icinga2-ido-pgsql
     state: installed
-  notify:
-    - restart icinga2
+  register: _package
+
+- name: Enable ido-pgsql feature
+  command:
+  args:
+    argv:
+      - icinga2
+      - feature
+      - enable
+      - ido-pgsql
+  register: _feature
+  creates: /etc/icinga2/features-enabled/ido-pgsql.conf
 
 - name: Ensure idoutils schema is loaded
   become: true
@@ -20,14 +30,10 @@
           - -t
           - -c
           - select count(name) from icinga_dbversion where name = 'idoutils'
-      register: icinga_dbversion
+      register: _dbversion
       changed_when: false
       failed_when: false
       check_mode: false
-
-    - name: debug
-      debug:
-        var: icinga_dbversion
 
     - name: Load icinga2-ido schema
       command:
@@ -37,4 +43,13 @@
           - icinga
           - -f
           - /usr/share/icinga2-ido-pgsql/schema/pgsql.sql
-      when: icinga_dbversion.stdout != "1"
+      when: _dbversion.stdout != "1"
+      register: _schema
+
+- meta: flush_handlers
+
+- name: Reload icinga2 configuration
+  service:
+    name: icinga2.service
+    state: reloaded
+  when: _package.changed or _feature.changed or _schema.changed

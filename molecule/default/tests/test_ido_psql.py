@@ -4,7 +4,7 @@ import re
 import testinfra.utils.ansible_runner
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('icinga_master')
+    os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('monitor-m01')
 
 
 def test_ido_package(host):
@@ -27,4 +27,7 @@ def test_service_postgresql(host):
 
 def test_icinga_object_ido(host):
     c = host.run('icinga2 object list --type IdoPgsqlConnection')
-    assert re.search(r'type = "IdoPgsqlConnection"', c.stdout)
+    assert c.rc == 0
+    assert re.search(
+        r"ido-pgsql",
+        c.stdout, flags=re.MULTILINE)

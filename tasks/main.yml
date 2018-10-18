@@ -1,16 +1,19 @@
 ---
 # tasks file for ssm.icinga2
 
+- name: Sanity check
+  assert:
+    that:
+      - icinga2_zone is defined
+      - icinga2_role in ['master', 'satellite']
+
 - include_tasks: install.yml
 
-- include_tasks: master.yml
-  when: '"icinga_master" in group_names'
-
-- include_tasks: satellite.yml
-  when: '"icinga_satellite" in group_names'
+- include_tasks: "setup-master.yml"
+  when: icinga2_role == 'master'
 
 - include_tasks: "ido-{{ icinga2_ido_type }}.yml"
-  when: '"icinga_web" in group_names'
+  when: icinga2_role == 'master'
 
-- include_tasks: web.yml
-  when: '"icinga_web" in group_names'
+- include_tasks: "setup-satellite.yml"
+  when: icinga2_role == 'satellite'

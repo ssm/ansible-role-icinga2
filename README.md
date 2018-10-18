@@ -35,6 +35,18 @@ icinga2 cluster architecture.
 
 TODO: Refactor inconsistent variable names and use.
 
+Inventory variables
++++++++++++++++++++
+
+- icinga2_zone: The zone name for this host
+
+- icinga2_parent_host: The parent host for CSR autosigning
+
+- icinga2_parent_zone: The parent zone (for --parent_host, or for --endpoint?)
+
+- icinga2_endpoint: A list of parent endpoints to connect to for configuration
+  and checks (string, array)
+
 Inventory group: icinga_master
 ++++++++++++++++++++++++++++++
 

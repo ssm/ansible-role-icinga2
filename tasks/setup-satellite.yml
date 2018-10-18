@@ -2,34 +2,37 @@
 - name: Sanity check
   assert:
     that:
-      - icinga_parent_fqdn is defined
+      - icinga2_endpoints is defined
+      - icinga2_zone is defined
+      - icinga2_parent_host is defined
+      - icinga2_parent_zone is defined
 
 - name: Interaction with CA
   block:
     - name: Get CA certificate
       slurp:
         src: "/var/lib/icinga2/ca/ca.crt"
-      register: icinga_ca_certificate
+      register: icinga2_ca_certificate
 
     - name: Get CA ticket
       command: >-
         icinga2 pki ticket --cn {{ inventory_hostname | quote }}
       register: icinga_pki_ticket
       changed_when: false
-  delegate_to: "{{ icinga_parent_fqdn }}"
+  delegate_to: "{{ icinga2_parent_host }}"
 
 - name: Interaction with parent node
   block:
     - name: Get trusted parent certificate
       slurp:
-        src: "/var/lib/icinga2/certs/{{ icinga_parent_fqdn }}.crt"
-      register: icinga_parent_certificate
-  delegate_to: "{{ icinga_parent_fqdn }}"
+        src: "/var/lib/icinga2/certs/{{ icinga2_parent_host }}.crt"
+      register: icinga2_parent_certificate
+  delegate_to: "{{ icinga2_parent_host }}"
 
 - name: Write ca certificate
   copy:
     dest: /var/lib/icinga2/certs/ca.crt
-    content: "{{ icinga_ca_certificate['content'] | b64decode }}"
+    content: "{{ icinga2_ca_certificate['content'] | b64decode }}"
     owner: icinga
     group: icinga
     mode: "0644"
@@ -37,7 +40,7 @@
 - name: Write trusted parent certificate
   copy:
     dest: /var/lib/icinga2/certs/trusted-parent.crt
-    content: "{{ icinga_parent_certificate['content'] | b64decode }}"
+    content: "{{ icinga2_parent_certificate['content'] | b64decode }}"
     owner: icinga
     group: icinga
     mode: "0644"
@@ -45,12 +48,14 @@
 - name: Setup node
   command: >-
     icinga2 node setup
-    --zone {{ inventory_hostname | quote }}
-    --parent_host {{ icinga_parent_fqdn | quote }},5665
-    --endpoint {{ icinga_parent_fqdn | quote }},{{ icinga_parent_fqdn | quote }},5665
+    --zone {{ icinga2_zone }}
+    --parent_host {{ icinga2_parent_host | quote }},5665
+    {% for icinga2_endpoint in icinga2_endpoints %}
+    --endpoint {{ icinga2_endpoint | quote }},{{ icinga2_endpoint | quote }},5665
+    {% endfor %}
     --trustedcert /var/lib/icinga2/certs/trusted-parent.crt
     --ticket {{ icinga_pki_ticket.stdout_lines[0] | quote }}
-    --parent_zone master
+    --parent_zone {{ icinga2_parent_zone }}
     --accept-commands
     --accept-config
     --disable-confd

@@ -1,6 +1,14 @@
 ---
+- name: Sanity check
+  assert:
+    that:
+      - icinga2_zone is defined
+
 - name: Configure master server
-  command: icinga2 node setup --master
+  command: >-
+    icinga2 node setup
+    --master
+    --zone {{ icinga2_zone }}
   args:
     creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
   register: icinga2_master_setup
