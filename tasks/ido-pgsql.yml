@@ -13,8 +13,8 @@
       - feature
       - enable
       - ido-pgsql
+    creates: /etc/icinga2/features-enabled/ido-pgsql.conf
   register: _feature
-  creates: /etc/icinga2/features-enabled/ido-pgsql.conf
 
 - name: Ensure idoutils schema is loaded
   become: true
