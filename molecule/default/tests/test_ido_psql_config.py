@@ -19,13 +19,7 @@ def test_ido_active(host):
         c.stdout, flags=re.MULTILINE)
 
 
-def test_service_postgresql(host):
-    s = host.service('postgresql')
-    assert s.is_enabled
-    assert s.is_running
-
-
-def test_icinga_object_ido(host):
+def test_icinga2_object(host):
     c = host.run('icinga2 object list --type IdoPgsqlConnection')
     assert c.rc == 0
     assert re.search(
