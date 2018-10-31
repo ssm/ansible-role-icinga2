@@ -29,6 +29,12 @@ provisioner:
       monitor-m01:
         icinga2_zone: master
         icinga2_role: master
+        postgresql_databases:
+          - name: icinga
+        postgresql_users:
+          - name: icinga
+            password: icinga
+            db: icinga
       monitor-s01:
         icinga2_zone: red
         icinga2_role: satellite

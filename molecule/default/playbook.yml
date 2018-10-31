@@ -1,17 +1,4 @@
 ---
-- name: Database
-  hosts:
-    - monitor-m01
-  roles:
-    - role: geerlingguy.postgresql
-  vars:
-    postgresql_databases:
-      - name: icinga
-    postgresql_users:
-      - name: icinga
-        password: icinga
-        db: icinga
-
 - name: Icinga 2
   hosts:
     - monitor-m01
