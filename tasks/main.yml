@@ -28,7 +28,6 @@
 - name: Sanity check
   assert:
     that:
-      - icinga2_zone is defined
       - icinga2_role in ['standalone', 'master', 'satellite']
 
 - include_tasks: repo-{{ansible_os_family}}.yml
