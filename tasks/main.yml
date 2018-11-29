@@ -7,6 +7,11 @@
       - icinga2_zone is defined
       - icinga2_role in ['master', 'satellite']
 
+- include_tasks: repo-{{ansible_os_family}}.yml
+  when:
+    - icinga2_manage_repo
+    - ansible_os_family == "RedHat"
+
 - include_tasks: install.yml
 
 - include_tasks: "setup-master.yml"

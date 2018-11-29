@@ -1,0 +1,10 @@
+---
+- name: Import signing key
+  rpm_key:
+    key: "{{ icinga2_key_url }}"
+    state: present
+
+- name: Configure package repository
+  package:
+    name: "{{ icinga2_repo_url }}"
+    state: present
