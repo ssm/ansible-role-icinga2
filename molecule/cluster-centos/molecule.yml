@@ -40,7 +40,7 @@ provisioner:
         icinga2_parent_zone: master
         icinga2_endpoints: [ monitor-m01 ]
 scenario:
-  name: default
+  name: cluster-centos
 verifier:
   name: testinfra
   options:
