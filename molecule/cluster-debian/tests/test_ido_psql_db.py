@@ -16,7 +16,8 @@ def test_query(host):
     c = host.run(
         "su - nagios -s /bin/sh -c %s",
         (
-            "env PGPASSWORD=icinga psql -h localhost -U icinga -d icinga -A -t -c \""
+            "env PGPASSWORD=icinga "
+            + "psql -h localhost -U icinga -d icinga -A -t -c \""
             + "SELECT icinga_objects.name1 FROM icinga_zones "
             + "LEFT JOIN icinga_objects "
             + "ON icinga_zones.zone_object_id = icinga_objects.object_id "
