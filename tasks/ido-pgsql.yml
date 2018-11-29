@@ -35,7 +35,7 @@
 
 - name: Ensure idoutils schema is loaded
   become: true
-  become_user: icinga
+  become_user: "{{ icinga2_service_user }}"
   block:
     - name: Check icinga2-ido schema presence
       command:
@@ -60,6 +60,7 @@
       check_mode: false
 
     - name: Load icinga2-ido schema
+      become_user: "{{ icinga2_service_user }}"
       command:
       args:
         argv:

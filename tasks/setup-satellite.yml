@@ -6,6 +6,8 @@
       - icinga2_zone is defined
       - icinga2_parent_host is defined
       - icinga2_parent_zone is defined
+      - icinga2_file_owner is defined
+      - icinga2_file_group is defined
       - icinga2_pki_cert_dir is defined
       - icinga2_pki_ca_dir is defined
 
@@ -35,16 +37,16 @@
   copy:
     dest: "{{ icinga2_pki_cert_dir }}/ca.crt"
     content: "{{ icinga2_ca_certificate['content'] | b64decode }}"
-    owner: icinga
-    group: icinga
+    owner: "{{ icinga2_file_owner }}"
+    group: "{{ icinga2_file_group }}"
     mode: "0644"
 
 - name: Write trusted parent certificate
   copy:
     dest: "{{ icinga2_pki_cert_dir }}/trusted-parent.crt"
     content: "{{ icinga2_parent_certificate['content'] | b64decode }}"
-    owner: icinga
-    group: icinga
+    owner: "{{ icinga2_file_owner }}"
+    group: "{{ icinga2_file_group }}"
     mode: "0644"
 
 - name: Setup node

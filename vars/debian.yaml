@@ -1,4 +1,7 @@
 ---
 icinga2_default_plugin_packages:
   - monitoring-plugins
+icinga2_service_user: nagios
+icinga2_file_owner: nagios
+icinga2_file_group: nagios
 icinga2_pki_cert_dir: /etc/icinga2/pki
