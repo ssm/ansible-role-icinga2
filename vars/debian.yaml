@@ -1,3 +1,4 @@
 ---
 icinga2_default_plugin_packages:
   - monitoring-plugins
+icinga2_pki_cert_dir: /etc/icinga2/pki

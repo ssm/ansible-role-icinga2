@@ -6,12 +6,14 @@
       - icinga2_zone is defined
       - icinga2_parent_host is defined
       - icinga2_parent_zone is defined
+      - icinga2_pki_cert_dir is defined
+      - icinga2_pki_ca_dir is defined
 
 - name: Interaction with CA
   block:
     - name: Get CA certificate
       slurp:
-        src: "/var/lib/icinga2/ca/ca.crt"
+        src: "{{ icinga2_pki_ca_dir }}/ca.crt"
       register: icinga2_ca_certificate
 
     - name: Get CA ticket
@@ -25,13 +27,13 @@
   block:
     - name: Get trusted parent certificate
       slurp:
-        src: "/var/lib/icinga2/certs/{{ icinga2_parent_host }}.crt"
+        src: "{{ icinga2_pki_cert_dir }}/{{ icinga2_parent_host }}.crt"
       register: icinga2_parent_certificate
   delegate_to: "{{ icinga2_parent_host }}"
 
 - name: Write ca certificate
   copy:
-    dest: /var/lib/icinga2/certs/ca.crt
+    dest: "{{ icinga2_pki_cert_dir }}/ca.crt"
     content: "{{ icinga2_ca_certificate['content'] | b64decode }}"
     owner: icinga
     group: icinga
@@ -39,7 +41,7 @@
 
 - name: Write trusted parent certificate
   copy:
-    dest: /var/lib/icinga2/certs/trusted-parent.crt
+    dest: "{{ icinga2_pki_cert_dir }}/trusted-parent.crt"
     content: "{{ icinga2_parent_certificate['content'] | b64decode }}"
     owner: icinga
     group: icinga
@@ -53,14 +55,14 @@
     {% for icinga2_endpoint in icinga2_endpoints %}
     --endpoint {{ icinga2_endpoint | quote }},{{ icinga2_endpoint | quote }},5665
     {% endfor %}
-    --trustedcert /var/lib/icinga2/certs/trusted-parent.crt
+    --trustedcert {{ icinga2_pki_cert_dir }}/trusted-parent.crt
     --ticket {{ icinga_pki_ticket.stdout_lines[0] | quote }}
     --parent_zone {{ icinga2_parent_zone }}
     --accept-commands
     --accept-config
     --disable-confd
   args:
-    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
+    creates: "{{ icinga2_pki_cert_dir }}/{{ inventory_hostname }}.crt"
   register: icinga2_satellite_setup
 
 - name: Restart

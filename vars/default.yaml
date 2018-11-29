@@ -4,3 +4,5 @@ icinga2_default_ido_host: localhost
 icinga2_default_ido_password: icinga
 icinga2_default_ido_user: icinga
 icinga2_default_role: standalone
+icinga2_pki_ca_dir: /var/lib/icinga2/ca
+icinga2_pki_cert_dir: /var/lib/icinga2/certs

@@ -10,7 +10,7 @@
     --master
     --zone {{ icinga2_zone }}
   args:
-    creates: "/var/lib/icinga2/certs/{{ inventory_hostname }}.crt"
+    creates: "{{ icinga2_pki_cert_dir }}/{{ inventory_hostname }}.crt"
   register: icinga2_master_setup
 
 - name: Restart
