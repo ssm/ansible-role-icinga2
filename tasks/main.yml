@@ -1,6 +1,15 @@
 ---
 # tasks file for ssm.icinga2
 
+- name: Include defaults
+  include_vars: "{{ item }}"
+  with_items:
+    - "default.yaml"
+    - "{{ ansible_os_family | lower }}.yaml"
+    - "{{ ansible_distribution | lower }}.yaml"
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yaml"
+  failed_when: false
+
 - name: Sanity check
   assert:
     that:
