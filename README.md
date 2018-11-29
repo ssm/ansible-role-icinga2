@@ -63,6 +63,20 @@ TODO: Refactor inconsistent variable names and use.
 - icinga2\_endpoint: A list of parent endpoints to connect to for
   configuration and checks (string, array)
 
+- icinga2\_ido\_database: The database name used for the IDO
+  database. Default is "icinga".
+
+- icinga2\_ido\_host: The hostname used when connecting the the IDO
+  database. Default is "localhost".
+
+- icinga2\_ido\_username: The username for authenticating to the IDO
+  database. Default is "icinga".
+
+- icinga2\_ido\_password: The password for authenticating to the IDO
+  database. Default is "icinga"
+
+  Please change this password as soon as practically possible.
+
 ## Example Playbook
 
 Order the hosts in the inventory so the master is provisioned first. The

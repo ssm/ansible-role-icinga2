@@ -1,4 +1,19 @@
 ---
+- name: Set variables
+  set_fact:
+    icinga2_ido_host: "{{ icinga2_ido_host | default(icinga2_default_ido_host) }}"
+    icinga2_ido_database: "{{ icinga2_ido_database | default(icinga2_default_ido_database) }}"
+    icinga2_ido_user: "{{ icinga2_ido_user | default(icinga2_default_ido_user) }}"
+    icinga2_ido_password: "{{ icinga2_ido_password | default(icinga2_default_ido_password) }}"
+
+- name: Sanity check
+  assert:
+    that:
+      - icinga2_ido_host is defined
+      - icinga2_ido_database is defined
+      - icinga2_ido_user is defined
+      - icinga2_ido_password is defined
+
 - name: Ensure package is installed
   package:
     name: icinga2-ido-pgsql
@@ -14,6 +29,8 @@
       - enable
       - ido-pgsql
     creates: /etc/icinga2/features-enabled/ido-pgsql.conf
+  environment:
+    PGPASSWORD: "{{ icinga2_ido_password }}"
   register: _feature
 
 - name: Ensure idoutils schema is loaded
@@ -25,11 +42,18 @@
       args:
         argv:
           - psql
-          - icinga
+          - -h
+          - "{{ icinga2_ido_host }}"
+          - -U
+          - "{{ icinga2_ido_user }}"
+          - -d
+          - "{{ icinga2_ido_database }}"
           - -A
           - -t
           - -c
           - select count(name) from icinga_dbversion where name = 'idoutils'
+      environment:
+        PGPASSWORD: "{{ icinga2_ido_password }}"
       register: _dbversion
       changed_when: false
       failed_when: false
@@ -40,9 +64,16 @@
       args:
         argv:
           - psql
-          - icinga
+          - -h
+          - "{{ icinga2_ido_host }}"
+          - -U
+          - "{{ icinga2_ido_user }}"
+          - -d
+          - "{{ icinga2_ido_database }}"
           - -f
           - /usr/share/icinga2-ido-pgsql/schema/pgsql.sql
+      environment:
+        PGPASSWORD: "{{ icinga2_ido_password }}"
       when: _dbversion.stdout != "1"
       register: _schema
 
