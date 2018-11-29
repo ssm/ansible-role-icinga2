@@ -15,6 +15,11 @@
     icinga2_role: "{{ icinga2_default_role }}"
   when: icinga2_role is not defined
 
+- name: Ensure variable icinga2_package_plugins is defined
+  set_fact:
+    icinga2_plugin_packages: "{{ icinga2_default_plugin_packages }}"
+  when: icinga2_plugin_packages is not defined
+
 - name: Sanity check
   assert:
     that:
