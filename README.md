@@ -15,14 +15,15 @@ TODO: Write requirements documentation.
 
 ## Role Variables
 
-- icinga2_manage_repo: When this is set to a true value, the role will install
-  and configure the repository and signing key for the icinga packages.
+- icinga2\_manage\_repo: When this is set to a true value, the role
+  will install and configure the repository and signing key for the
+  icinga packages.
 
-- icinga2_key_url: The URL for the icinga repo signing key. Used only if
-  icinga2_manage_repo is set to a true value.
+- icinga2\_key\_url: The URL for the icinga repo signing key. Used
+  only if icinga2\_manage\_repo is set to a true value.
 
-- icinga2_repo_url: The URL for the icinga repo. Used only if
-  icinga2_manage_repo is set to a true value.
+- icinga2\_repo\_url: The URL for the icinga repo. Used only if
+  icinga2\_manage\_repo is set to a true value.
 
 TODO: Write documentation. In the meantime, see defaults/main.yml
 
@@ -35,16 +36,32 @@ TODO: Refactor inconsistent variable names and use.
 
 ### Inventory variables
 
-- icinga2_role: The role of this host. "master" or "satellite"
+- icinga2\_role: The role of this host. "standalone", "master" or
+  "satellite".  Default is "standalone".
 
-- icinga2_zone: The zone name for this host
+  If the role is "standalone", no cluster PKI actions will be
+  performed.
 
-- icinga2_parent_host: The parent host for CSR autosigning
+  If the role is "master", a cluster PKI CA will be initialized.
 
-- icinga2_parent_zone: The parent zone (for --parent_host, or for --endpoint?)
+  If the role is "satellite", a PKI CSR will be generated on this
+  host, and submitted to the host indicated by the
+  "icinga2\_parent\_host" variable.
 
-- icinga2_endpoint: A list of parent endpoints to connect to for configuration
-  and checks (string, array)
+  The "satellite" role requires another host in the same play having
+  the "master" role already configured, as well as properly configured
+  icinga2\_parent\_host and icinga2\_parent\_zone variables.
+
+- icinga2\_zone: The zone name for this host.  Default is the value of
+  inventory\_hostname
+
+- icinga2\_parent\_host: The parent host for CSR signing.
+
+- icinga2\_parent\_zone: The parent zone (for --parent\_host, or for
+  --endpoint?)
+
+- icinga2\_endpoint: A list of parent endpoints to connect to for
+  configuration and checks (string, array)
 
 ## Example Playbook
 
