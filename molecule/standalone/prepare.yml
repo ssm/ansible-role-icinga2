@@ -1,0 +1,9 @@
+---
+- name: (prepare) Install role requirements
+  hosts: all
+  tasks:
+    - name: Ensure EPEL repository is present
+      package:
+        name: epel-release
+        state: present
+      when: ansible_os_family == "RedHat"
