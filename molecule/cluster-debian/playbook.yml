@@ -1,0 +1,7 @@
+---
+- name: Icinga 2
+  hosts:
+    - monitor-m01
+    - monitor-s01
+  roles:
+    - role: ssm.icinga2
