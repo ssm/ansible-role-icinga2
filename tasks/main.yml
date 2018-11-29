@@ -10,6 +10,11 @@
     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yaml"
   failed_when: false
 
+- name: Ensure variable icinga2_zone is defined
+  set_fact:
+    icinga2_zone: "{{ inventory_hostname }}"
+  when: icinga2_zone is not defined
+
 - name: Ensure variable icinga2_role is defined
   set_fact:
     icinga2_role: "{{ icinga2_default_role }}"
