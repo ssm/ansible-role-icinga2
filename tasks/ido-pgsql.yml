@@ -2,7 +2,7 @@
 - name: Ensure package is installed
   package:
     name: icinga2-ido-pgsql
-    state: installed
+    state: present
   register: _package
 
 - name: Enable ido-pgsql feature

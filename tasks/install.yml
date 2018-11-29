@@ -2,12 +2,12 @@
 - name: Install monitoring plugins
   package:
     name: nagios-plugins-all
-    state: installed
+    state: present
 
 - name: Install icinga2 server
   package:
     name: icinga2
-    state: installed
+    state: present
 
 - name: Start and enable service
   service:
