@@ -10,6 +10,7 @@
       - icinga2_file_group is defined
       - icinga2_pki_cert_dir is defined
       - icinga2_pki_ca_dir is defined
+      - icinga2_package_version is defined
 
 - name: Interaction with CA
   block:
@@ -49,20 +50,37 @@
     group: "{{ icinga2_file_group }}"
     mode: "0644"
 
+- debug:
+    var: icinga2_package_version
+
+- name: "Node setup options for Icinga 2.9 and greater"
+  set_fact:
+    _node_setup_options: >-
+      --parent_zone {{ icinga2_parent_zone | quote }}
+      --parent_host {{ icinga2_parent_host | quote }}
+      --disable-confd
+  when:
+    - icinga2_package_version is not search('^2\.[0-8]\.')
+
+- name: "Node setup options for Icinga 2.8 and below"
+  set_fact:
+    _node_setup_options: >-
+      --master_host {{ icinga2_parent_host | quote }}
+  when:
+    - icinga2_package_version is search('^2\.[0-8]\.')
+
 - name: Setup node
   command: >-
     icinga2 node setup
     --zone {{ icinga2_zone }}
-    --parent_host {{ icinga2_parent_host | quote }},5665
+    {{ _node_setup_options }}
     {% for icinga2_endpoint in icinga2_endpoints %}
     --endpoint {{ icinga2_endpoint | quote }},{{ icinga2_endpoint | quote }},5665
     {% endfor %}
     --trustedcert {{ icinga2_pki_cert_dir }}/trusted-parent.crt
     --ticket {{ icinga_pki_ticket.stdout_lines[0] | quote }}
-    --parent_zone {{ icinga2_parent_zone }}
     --accept-commands
     --accept-config
-    --disable-confd
   args:
     creates: "{{ icinga2_pki_cert_dir }}/{{ inventory_hostname }}.crt"
   register: icinga2_satellite_setup

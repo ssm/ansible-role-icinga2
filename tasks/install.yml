@@ -15,3 +15,38 @@
     name: icinga2
     state: started
     enabled: true
+
+
+- name: Get icinga2 package version for OS family Debian
+  when: ansible_os_family == "Debian"
+  block:
+    - name: Read package information for icinga2 (Debian)
+      command:
+      args:
+        argv:
+          - "dpkg-query"
+          - "--show"
+          - "--showformat"
+          - "${source:Upstream-Version}"
+          - "icinga2"
+      register: _output_debian
+      changed_when: false
+      check_mode: false
+
+    - name: Set variable icinga2_package_version (Debian)
+      set_fact:
+        icinga2_package_version: "{{_output_debian.stdout_lines[0]}}"
+
+- name: Get icinga2 package version for OS family RedHat
+  when: ansible_os_family == "RedHat"
+  block:
+    - name: Read package information for icinga2 (RedHat)
+      yum:
+        list: "icinga2"
+      register: _output_redhat
+
+    - name: Set variable icinga2_package_version (RedHat)
+      set_fact:
+        icinga2_package_version: "{{_output_redhat|json_query(jsonquery)}}"
+      vars:
+        jsonquery: "results[?yumstate=='installed'].version"
