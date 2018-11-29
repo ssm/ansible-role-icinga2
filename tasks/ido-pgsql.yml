@@ -80,6 +80,6 @@
 
 - name: Reload icinga2 configuration
   service:
-    name: icinga2.service
+    name: icinga2
     state: reloaded
   when: _package.changed or _feature.changed or _schema.changed
