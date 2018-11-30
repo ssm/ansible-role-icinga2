@@ -42,5 +42,7 @@ def test_tls_signature(host):
 
 
 def test_icinga2_object_sync(host):
-    o = host.run('icinga2 object list --type Endpoint --name cluster-debian-master')
+    fqdn = host.run('hostname --fqdn')
+    o = host.run('icinga2 object list --type Endpoint --name %s',
+                 fqdn)
     assert re.search('Object', o.stdout)
