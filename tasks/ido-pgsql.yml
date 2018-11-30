@@ -20,18 +20,21 @@
     state: present
   register: _package
 
+- name: Configure ido-pgsql feature
+  template:
+    src: ido-pgsql.conf.j2
+    dest: /etc/icinga2/features-available/ido-pgsql.conf
+    owner: "root"
+    group: "{{ icinga2_file_group }}"
+    mode: "0640"
+  register: _feature_file
+
 - name: Enable ido-pgsql feature
-  command:
-  args:
-    argv:
-      - icinga2
-      - feature
-      - enable
-      - ido-pgsql
-    creates: /etc/icinga2/features-enabled/ido-pgsql.conf
-  environment:
-    PGPASSWORD: "{{ icinga2_ido_password }}"
-  register: _feature
+  file:
+    state: link
+    src: /etc/icinga2/features-available/ido-pgsql.conf
+    dest: /etc/icinga2/features-enabled/ido-pgsql.conf
+  register: _feature_link
 
 - name: Ensure idoutils schema is loaded
   become: true
@@ -82,4 +85,8 @@
   service:
     name: icinga2
     state: reloaded
-  when: _package.changed or _feature.changed or _schema.changed
+  when: >-
+    _package.changed
+    or _feature_file.changed
+    or _feature_link.changed
+    or _schema.changed
