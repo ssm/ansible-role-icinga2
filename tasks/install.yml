@@ -49,4 +49,4 @@
       set_fact:
         icinga2_package_version: "{{_output_redhat|json_query(jsonquery)}}"
       vars:
-        jsonquery: "results[?yumstate=='installed'].version"
+        jsonquery: "results[?yumstate=='installed'].version | [0]"
