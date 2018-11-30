@@ -6,13 +6,13 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: monitor-m01
+  - name: cluster-centos-master
     image: centos/systemd
     privileged: true
     command: /usr/sbin/init
     networks:
       - name: molecule-icinga2
-  - name: monitor-s01
+  - name: cluster-centos-satellite
     image: centos/systemd
     privileged: true
     command: /usr/sbin/init
@@ -24,7 +24,7 @@ provisioner:
     name: ansible-lint
   inventory:
     host_vars:
-      monitor-m01:
+      cluster-centos-master:
         icinga2_zone: master
         icinga2_role: master
         postgresql_databases:
@@ -33,12 +33,12 @@ provisioner:
           - name: icinga
             password: icinga
             db: icinga
-      monitor-s01:
+      cluster-centos-satellite:
         icinga2_zone: red
         icinga2_role: satellite
-        icinga2_parent_host: monitor-m01
+        icinga2_parent_host: cluster-centos-master
         icinga2_parent_zone: master
-        icinga2_endpoints: [ monitor-m01 ]
+        icinga2_endpoints: [ cluster-centos-master ]
 scenario:
   name: cluster-centos
 verifier:

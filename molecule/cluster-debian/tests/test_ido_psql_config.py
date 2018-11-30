@@ -4,7 +4,7 @@ import re
 import testinfra.utils.ansible_runner
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
-    os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('monitor-m01')
+    os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('cluster-debian-master')
 
 
 def test_ido_package(host):

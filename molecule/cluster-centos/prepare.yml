@@ -12,6 +12,6 @@
 
 - name: Prepare database
   hosts:
-    - monitor-m01
+    - cluster-centos-master
   roles:
     - role: geerlingguy.postgresql

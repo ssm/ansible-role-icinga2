@@ -1,7 +1,7 @@
 ---
 - name: Icinga 2
   hosts:
-    - monitor-m01
-    - monitor-s01
+    - cluster-centos-master
+    - cluster-centos-satellite
   roles:
     - role: ssm.icinga2

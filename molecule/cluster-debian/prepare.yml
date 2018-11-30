@@ -11,6 +11,6 @@
 
 - name: Prepare database
   hosts:
-    - monitor-m01
+    - cluster-debian-master
   roles:
     - role: geerlingguy.postgresql
