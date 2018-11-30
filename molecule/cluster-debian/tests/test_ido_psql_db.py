@@ -13,6 +13,7 @@ def test_service_postgresql(host):
 
 
 def test_query(host):
+    fqdn = host.run('hostname --fqdn').stdout
     c = host.run(
         "su - nagios -s /bin/sh -c %s",
         (
@@ -21,8 +22,8 @@ def test_query(host):
             + "SELECT icinga_objects.name1 FROM icinga_zones "
             + "LEFT JOIN icinga_objects "
             + "ON icinga_zones.zone_object_id = icinga_objects.object_id "
-            + "WHERE icinga_objects.name1 = \'master\';"
+            + "WHERE icinga_objects.name1 = \'%s\';" % fqdn
             + "\"")
         )
     assert c.rc == 0
-    assert c.stdout == "master"
+    assert c.stdout == fqdn

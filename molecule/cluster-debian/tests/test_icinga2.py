@@ -42,7 +42,7 @@ def test_tls_signature(host):
 
 
 def test_icinga2_object_sync(host):
-    fqdn = host.run('hostname --fqdn')
+    fqdn = host.run('hostname --fqdn').stdout
     o = host.run('icinga2 object list --type Endpoint --name %s',
                  fqdn)
     assert re.search('Object', o.stdout)
