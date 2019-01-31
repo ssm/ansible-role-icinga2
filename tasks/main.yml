@@ -35,4 +35,7 @@
   when: icinga2_role == 'master'
 
 - include_tasks: "setup-satellite.yml"
-  when: icinga2_role in ['satellite', 'client']
+  when: icinga2_role == 'satellite'
+
+- include_tasks: "setup-satellite.yml"
+  when: icinga2_role == "client"
