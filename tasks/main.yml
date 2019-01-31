@@ -12,6 +12,7 @@
 
 - name: Set variables
   set_fact:
+    icinga2_zone: "{{ icinga2_zone | default(inventory_hostname) }}"
     icinga2_role: "{{ icinga2_role | default(icinga2_default_role) }}"
     icinga2_plugin_packages: "{{ icinga2_plugin_packages | default(icinga2_default_plugin_packages) }}"
 
