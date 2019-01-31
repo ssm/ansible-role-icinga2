@@ -39,12 +39,3 @@ def test_tls_signature(host):
 
     assert v.stdout == '%s: OK' % certfile
     assert issuer_ca.stdout == issuer_crt.stdout
-
-
-def test_icinga2_object_sync(host):
-    cmd = 'icinga2 object list --type {type} --name {name}'.format(
-        type="Endpoint",
-        name="icinga-centos-master",
-    )
-    o = host.run(cmd)
-    assert re.search('Object', o.stdout)
