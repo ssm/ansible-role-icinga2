@@ -28,7 +28,7 @@
 - name: Sanity check
   assert:
     that:
-      - icinga2_role in ['standalone', 'master', 'satellite']
+      - icinga2_role in ['standalone', 'master', 'satellite', 'client']
 
 - include_tasks: repository-{{ansible_os_family}}.yml
   when:
@@ -44,4 +44,4 @@
   when: icinga2_role == 'master'
 
 - include_tasks: "setup-satellite.yml"
-  when: icinga2_role == 'satellite'
+  when: icinga2_role in ['satellite', 'client']
