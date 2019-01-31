@@ -4,6 +4,7 @@
     that:
       - icinga2_endpoints is defined
       - icinga2_zone is defined
+      - icinga2_master_host is defined
       - icinga2_parent_host is defined
       - icinga2_parent_zone is defined
       - icinga2_file_owner is defined
@@ -24,7 +25,7 @@
         icinga2 pki ticket --cn {{ inventory_hostname | quote }}
       register: icinga_pki_ticket
       changed_when: false
-  delegate_to: "{{ icinga2_parent_host }}"
+  delegate_to: "{{ icinga2_master_host }}"
 
 - name: Interaction with parent node
   block:

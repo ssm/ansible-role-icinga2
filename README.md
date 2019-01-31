@@ -55,6 +55,8 @@ TODO: Refactor inconsistent variable names and use.
 - icinga2\_zone: The zone name for this host.  Default is the value of
   inventory\_hostname
 
+- icinga2\_master\_host: The master host for issuing CA tickets.
+
 - icinga2\_parent\_host: The parent host for CSR signing.
 
 - icinga2\_parent\_zone: The parent zone (for --parent\_host, or for
