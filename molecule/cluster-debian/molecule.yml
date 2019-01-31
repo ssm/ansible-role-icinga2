@@ -32,6 +32,7 @@ provisioner:
       cluster-debian-satellite:
         icinga2_zone: red
         icinga2_role: satellite
+        icinga2_master_host: cluster-debian-master
         icinga2_parent_host: cluster-debian-master
         icinga2_parent_zone: master
         icinga2_endpoints: [ cluster-debian-master ]
