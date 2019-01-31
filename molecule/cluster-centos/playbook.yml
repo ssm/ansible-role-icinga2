@@ -3,5 +3,6 @@
   hosts:
     - cluster-centos-master
     - cluster-centos-satellite
+    - cluster-centos-client
   roles:
     - role: ssm.icinga2
