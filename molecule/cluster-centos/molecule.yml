@@ -18,6 +18,12 @@ platforms:
     command: /usr/sbin/init
     networks:
       - name: molecule-icinga2
+  - name: cluster-centos-client
+    image: centos/systemd
+    privileged: true
+    command: /usr/sbin/init
+    networks:
+      - name: molecule-icinga2
 provisioner:
   name: ansible
   lint:
@@ -36,8 +42,16 @@ provisioner:
       cluster-centos-satellite:
         icinga2_zone: red
         icinga2_role: satellite
+        icinga2_master_host: cluster-centos-master
         icinga2_parent_host: cluster-centos-master
         icinga2_parent_zone: master
+        icinga2_endpoints: [ cluster-centos-master ]
+      cluster-centos-client:
+        icinga2_zone: blue
+        icinga2_role: client
+        icinga2_master_host: cluster-centos-master
+        icinga2_parent_host: cluster-centos-satellite
+        icinga2_parent_zone: red
         icinga2_endpoints: [ cluster-centos-master ]
 scenario:
   name: cluster-centos
