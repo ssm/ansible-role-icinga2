@@ -21,7 +21,7 @@
     that:
       - icinga2_role in ['standalone', 'master', 'satellite', 'client']
 
-- include_tasks: repository-{{ansible_os_family}}.yml
+- include_tasks: "repository-{{ ansible_os_family }}.yml"
   when:
     - icinga2_manage_repo
     - ansible_os_family == "RedHat"
