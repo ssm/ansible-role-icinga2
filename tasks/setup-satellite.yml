@@ -84,13 +84,11 @@
     --accept-config
   args:
     creates: "{{ icinga2_pki_cert_dir }}/{{ inventory_hostname }}.crt"
-  register: icinga2_satellite_setup
+  notify:
+    - restart icinga2
 
-- name: Restart
-  service:
-    name: icinga2
-    state: restarted
-  when: icinga2_satellite_setup.changed
+- name: Trigger restart, if any
+  meta: flush_handlers
 
 - name: Wait for icinga service pid
   wait_for:
