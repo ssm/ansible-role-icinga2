@@ -63,6 +63,7 @@
       check_mode: false
 
     - name: Load icinga2-ido schema
+      become: true
       become_user: "{{ icinga2_service_user }}"
       command:
       args:
