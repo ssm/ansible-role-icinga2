@@ -35,7 +35,7 @@
 
     - name: Set variable icinga2_package_version (Debian)
       set_fact:
-        icinga2_package_version: "{{_output_debian.stdout_lines[0]}}"
+        icinga2_package_version: "{{ _output_debian.stdout_lines[0] }}"
 
 - name: Get icinga2 package version for OS family RedHat
   when: ansible_os_family == "RedHat"
@@ -47,6 +47,6 @@
 
     - name: Set variable icinga2_package_version (RedHat)
       set_fact:
-        icinga2_package_version: "{{_output_redhat|json_query(jsonquery)}}"
+        icinga2_package_version: "{{ _output_redhat | json_query(jsonquery) }}"
       vars:
         jsonquery: "results[?yumstate=='installed'].version | [0]"
