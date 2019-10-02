@@ -51,9 +51,6 @@
     group: "{{ icinga2_file_group }}"
     mode: "0644"
 
-- debug:
-    var: icinga2_package_version
-
 - name: "Node setup options for Icinga 2.9 and greater"
   set_fact:
     _node_setup_options: >-
