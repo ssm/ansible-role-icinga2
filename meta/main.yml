@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  description: Manage Icinga 2 cluster
   author: Stig Sandbeck Mathisen
 
   license: GPLv3
