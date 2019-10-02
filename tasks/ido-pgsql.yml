@@ -88,4 +88,3 @@
 
 - name: Reload icinga2 if needed
   meta: flush_handlers
-
